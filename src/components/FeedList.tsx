@@ -17,7 +17,7 @@ export default function FeedList() {
             <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-tr from-indigo-500 to-fuchsia-500" />
             <button
               onClick={handleCreatePost}
-              className="flex-1 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-3 text-left text-sm text-neutral-500 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+              className="flex-1 rounded-full border border-neutral-200 px-4 py-3 text-left text-sm text-neutral-500 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
             >
               Write your story.
             </button>
@@ -42,7 +42,7 @@ export default function FeedList() {
                 <span className="rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">#nextjs</span>
                 <span className="rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">#tailwind</span>
               </div>
-              <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-white hover:opacity-90">Read</button>
+              <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90">Read</button>
             </div>
           </article>
         ))}
