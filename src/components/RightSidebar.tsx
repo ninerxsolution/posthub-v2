@@ -1,7 +1,7 @@
 export default function RightSidebar() {
   return (
     <aside className="hidden lg:col-span-3 lg:block">
-      <div className="sticky top-4 space-y-4 top-[100px]">
+      <div className="sticky top-4 space-y-4 top-[90px]">
         <section className="rounded-xl border bg-white/50 p-4 shadow-sm dark:bg-neutral-900/50">
           <h3 className="mb-3 text-sm font-semibold">Hot Topics</h3>
           <ul className="space-y-2 text-sm">

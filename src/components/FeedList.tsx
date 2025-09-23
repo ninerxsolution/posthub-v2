@@ -5,7 +5,7 @@ export default function FeedList() {
   const router = useRouter();
 
   const handleCreatePost = () => {
-    router.push("/post/create");
+    router.push("/posts/create");
   };
 
   return (
@@ -42,7 +42,7 @@ export default function FeedList() {
                 <span className="rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">#nextjs</span>
                 <span className="rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">#tailwind</span>
               </div>
-              <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90">Read</button>
+              <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90" onClick={() => router.push(`/posts/1`)}>Read</button>
             </div>
           </article>
         ))}
