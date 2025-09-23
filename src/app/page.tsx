@@ -1,12 +1,19 @@
 
 "use client";
 import { useLanguage } from "@/i18n/LanguageProvider";
+import LeftSidebar from "@/components/LeftSidebar";
+import FeedList from "@/components/FeedList";
+import RightSidebar from "@/components/RightSidebar";
 
 export default function Home() {
   const { dict } = useLanguage();
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] font-bold items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {dict.home.hello}
-    </div>
+    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <LeftSidebar />
+        <FeedList />
+        <RightSidebar />
+      </div>
+    </main>
   );
 }

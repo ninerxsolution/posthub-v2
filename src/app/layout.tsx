@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/site/Navbar";
-import Footer from "@/components/site/Footer";
+import AppShell from "@/components/site/AppShell";
 import LanguageProvider from "@/i18n/LanguageProvider";
 
 const geistSans = localFont({
@@ -16,7 +15,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 const notoThai = localFont({
-  src: "../public/fonts/Noto_Sans_Thai/NotoSansThai-VariableFont_wdth,wght.ttf",
+  src: "../../public/fonts/Noto_Sans_Thai/NotoSansThai-VariableFont_wdth,wght.ttf",
   variable: "--font-noto-thai",
   weight: "100 900",
   display: "swap",
@@ -38,13 +37,9 @@ export default function RootLayout({
         className={`${notoThai.variable} antialiased`}
       >
         <LanguageProvider>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <AppShell>
+            {children}
+          </AppShell>
         </LanguageProvider>
       </body>
     </html>
