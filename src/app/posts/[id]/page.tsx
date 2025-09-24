@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Bookmark, Edit, Share2, EyeOff } from "lucide-react";
 
 type Post = {
   id: string;
@@ -30,6 +31,7 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
   if (!post) {
     return notFound();
   }
+  const isOwner = params.id === "1";
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
@@ -37,7 +39,53 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
         <Link href="/posts" className="text-sm text-primary hover:underline">
           ← All posts
         </Link>
-        <div className="text-xs text-muted-foreground">{post.minutes} min read</div>
+        {isOwner ? (
+          <div className="flex items-center gap-3">
+            <div className="text-xs text-muted-foreground">{post.minutes} min read</div>
+            <Link
+              href={`/posts/${post.id}/edit`}
+              className="inline-flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm shadow-sm transition-colors hover:bg-accent"
+            >
+              <Edit className="h-4 w-4" />
+              Edit
+            </Link>
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm shadow-sm transition-colors hover:bg-accent"
+              title="Unpublish"
+              aria-label="Unpublish"
+            >
+              <EyeOff className="h-4 w-4" />
+              Unpublish
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="text-xs text-muted-foreground">{post.minutes} min read</div>
+            <button
+              type="button"
+              className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+            >
+              Follow
+            </button>
+            <button
+              type="button"
+              aria-label="Share"
+              title="Share"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border bg-background text-foreground shadow-sm transition-colors hover:bg-accent"
+            >
+              <Share2 className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Bookmark post"
+              title="Bookmark"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border bg-background text-foreground shadow-sm transition-colors hover:bg-accent"
+            >
+              <Bookmark className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       <header className="mb-6">

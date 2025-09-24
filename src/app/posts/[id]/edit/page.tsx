@@ -1,17 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function CreatePostPage() {
+type Post = {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  cover?: string;
+};
+
+function getMockPost(id: string): Post | null {
+  const idx = Number(id);
+  if (Number.isNaN(idx)) return null;
+  return {
+    id,
+    title: `Sample Post Title ${id}`,
+    content:
+      "This is editable mock content for the post. Replace with your own data when wired to an API.",
+    tags: idx % 2 ? ["react", "nextjs"] : ["tailwind", "design"],
+    cover: idx % 2 === 0 ? `https://picsum.photos/seed/edit-${id}/1200/800` : undefined,
+  };
+}
+
+export default function EditPostPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const [form, setForm] = useState({
-    title: "",
-    content: "",
-    tags: "",
-    coverUrl: "",
-  });
-  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const initial = useMemo(() => getMockPost(params.id), [params.id]);
+
+  const [title, setTitle] = useState("");
+  const [tags, setTags] = useState("");
   const [coverPreview, setCoverPreview] = useState<string>("");
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [saving, setSaving] = useState(false);
+
   type ContentBlock = {
     id: string;
     type: "text" | "image";
@@ -20,51 +42,40 @@ export default function CreatePostPage() {
     previewUrl?: string;
   };
   const [blocks, setBlocks] = useState<ContentBlock[]>([]);
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  useEffect(() => {
+    if (!initial) return;
+    setTitle(initial.title);
+    setTags(initial.tags.join(", "));
+    setCoverPreview(initial.cover ?? "");
+    // Seed blocks: text, image (from URL), text
+    setBlocks([
+      { id: crypto.randomUUID(), type: "text", text: initial.content },
+      {
+        id: crypto.randomUUID(),
+        type: "image",
+        file: null,
+        previewUrl:
+          "https://i.etsystatic.com/45893541/r/il/545bc4/6453954482/il_570xN.6453954482_q062.jpg",
+      },
+      {
+        id: crypto.randomUUID(),
+        type: "text",
+        text:
+          "This is another paragraph after the image. You can continue editing or rearrange blocks.",
+      },
+    ]);
+  }, [initial]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.title.trim() || !form.content.trim()) return;
-    setSubmitting(true);
-    try {
-      // TODO: integrate with API
-      console.log("Create post payload", {
-        ...form,
-        coverFileName: coverFile?.name ?? null,
-        contentBlocks: blocks.map((b) => ({
-          type: b.type,
-          text: b.text ?? "",
-          // In real impl you would upload image and store URL
-          imageName: b.file?.name ?? null,
-        })),
-        tags: form.tags
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
-      });
-      router.push("/");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) {
       setCoverFile(null);
       setCoverPreview("");
       return;
     }
     setCoverFile(file);
-    const url = URL.createObjectURL(file);
-    setCoverPreview(url);
+    setCoverPreview(URL.createObjectURL(file));
   };
 
   const addTextBlock = () => {
@@ -109,34 +120,72 @@ export default function CreatePostPage() {
     });
   };
 
-  const removeBlock = (id: string) => {
-    setBlocks((prev) => prev.filter((b) => b.id !== id));
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const combinedText = blocks
+      .filter((b) => b.type === "text")
+      .map((b) => (b.text ?? "").trim())
+      .filter(Boolean)
+      .join("\n\n");
+    if (!title.trim() || !combinedText.trim()) return;
+    setSaving(true);
+    try {
+      // Replace with API call
+      console.log("Update post", {
+        id: params.id,
+        title,
+        content: combinedText,
+        contentBlocks: blocks.map((b) => ({
+          type: b.type,
+          text: b.text ?? "",
+          imageName: b.file?.name ?? null,
+        })),
+        tags: tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        coverFileName: coverFile?.name ?? null,
+      });
+      router.push(`/posts/${params.id}`);
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (!initial) {
+    return (
+      <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
+        <p className="text-sm text-muted-foreground">Post not found.</p>
+        <Link href="/posts" className="mt-3 inline-block text-sm text-primary hover:underline">
+          ← Back to posts
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Create a new post</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Share your story with the community.
-        </p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Edit post</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Update your post details.</p>
+        </div>
+        <Link href={`/posts/${params.id}`} className="text-sm text-primary hover:underline">
+          Cancel
+        </Link>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Main column */}
+      <form onSubmit={onSubmit} className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="lg:col-span-8 space-y-6">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium">
-              Title
-            </label>
+            <label htmlFor="title" className="block text-sm font-medium">Title</label>
             <input
               id="title"
-              name="title"
               type="text"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Write an engaging title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              placeholder="Write an engaging title"
               required
             />
           </div>
@@ -193,78 +242,59 @@ export default function CreatePostPage() {
           </div>
         </div>
 
-        {/* Sidebar */}
         <aside className="lg:col-span-4">
           <div className="lg:sticky lg:top-24 space-y-6">
             <div>
-              <label htmlFor="cover" className="block text-sm font-medium">
-                Feature image (optional)
-              </label>
+              <label className="block text-sm font-medium">Feature image</label>
               <div className="mt-1 flex flex-col">
                 {coverPreview ? (
                   <div className="relative w-full overflow-hidden rounded-lg border bg-muted/30 aspect-[4/3] mb-5">
-                    <img
-                      src={coverPreview}
-                      alt="Cover preview"
-                      className="h-full w-full object-cover object-center"
-                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={coverPreview} alt="Cover preview" className="h-full w-full object-cover object-center" />
                   </div>
-                ) : ''}
-                <div>
-                  <input
-                    id="cover"
-                    name="cover"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="block w-full text-sm transition-all duration-200 ease-out file:transition-all file:duration-200 file:ease-out file:mr-3 file:rounded-md file:border file:border-primary/10 file:bg-background file:px-3 file:py-2 file:text-sm file:hover:bg-accent"
-                  />
-                  {coverPreview && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCoverFile(null);
-                        setCoverPreview("");
-                      }}
-                      className="mt-2 w-full rounded-md border px-3 py-2 text-xs hover:bg-accent"
-                    >
-                      Remove image
-                    </button>
-                  )}
-                </div>
+                ) : ""}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={onFileChange}
+                  className="block w-full text-sm transition-all duration-200 ease-out file:transition-all file:duration-200 file:ease-out file:mr-3 file:rounded-md file:border file:border-primary/10 file:bg-background file:px-3 file:py-2 file:text-sm file:hover:bg-accent"
+                />
+                {coverPreview && (
+                  <button
+                    type="button"
+                    onClick={() => { setCoverFile(null); setCoverPreview(""); }}
+                    className="mt-2 w-full rounded-md border px-3 py-2 text-xs hover:bg-accent"
+                  >
+                    Remove image
+                  </button>
+                )}
               </div>
             </div>
 
             <div>
-              <label htmlFor="tags" className="block text-sm font-medium">
-                Tags (comma separated)
-              </label>
+              <label className="block text-sm font-medium">Tags (comma separated)</label>
               <input
-                id="tags"
-                name="tags"
                 type="text"
-                value={form.tags}
-                onChange={handleChange}
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
                 placeholder="react, nextjs, tailwind"
                 className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
             </div>
 
             <div className="flex items-center justify-end gap-3">
-              <button
-                type="button"
-                disabled={submitting}
-                className="rounded-md bg-muted px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/80 disabled:opacity-60 w-full"
-                onClick={() => {}}
+              <Link
+                href={`/posts/${params.id}`}
+                className="rounded-md bg-muted px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/80 w-full text-center"
               >
-                Save as Draft
-              </button>
+                Cancel
+              </Link>
               <button
                 type="submit"
-                disabled={submitting}
+                disabled={saving}
                 className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-60 w-full"
               >
-                {submitting ? "Publishing..." : "Publish"}
+                {saving ? "Saving..." : "Save changes"}
               </button>
             </div>
           </div>

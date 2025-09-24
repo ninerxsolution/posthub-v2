@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ProfileTabs from "@/components/profile/ProfileTabs";
 type User = {
   username: string;
   name: string;
@@ -38,6 +39,24 @@ const MOCK_POSTS = Array.from({ length: 6 }).map((_, i) => ({
   excerpt:
     "Short excerpt of this article to tease the content and invite readers to click through.",
   minutes: 4 + (i % 5),
+}));
+
+const MOCK_BOOKMARKS = Array.from({ length: 4 }).map((_, i) => ({
+  id: String(i + 101),
+  title: `Saved post #${i + 1}`,
+  cover: i % 2 === 1 ? `https://picsum.photos/seed/bookmark-${i}/800/500` : undefined,
+  excerpt:
+    "A saved article you bookmarked to read later.",
+  minutes: 3 + (i % 4),
+}));
+
+const MOCK_ARCHIVE = Array.from({ length: 3 }).map((_, i) => ({
+  id: String(i + 201),
+  title: `Archived post #${i + 1}`,
+  cover: i % 2 === 0 ? `https://picsum.photos/seed/archive-${i}/800/500` : undefined,
+  excerpt:
+    "An older post that has been archived.",
+  minutes: 5 + (i % 6),
 }));
 
 export default function ProfilePage({ params }: { params: { username: string } }) {
@@ -91,35 +110,7 @@ export default function ProfilePage({ params }: { params: { username: string } }
         </div>
       </section>
 
-      {/* Tabs (static for mock) */}
-      <div className="mt-6 flex items-center gap-4 border-b text-sm">
-        <button className="-mb-px border-b-2 border-foreground px-2 py-3 font-medium">Posts</button>
-        <button className="-mb-px border-b-2 border-transparent px-2 py-3 text-muted-foreground hover:border-foreground/30">About</button>
-      </div>
-
-      {/* Posts grid */}
-      <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {MOCK_POSTS.map((p) => (
-          <article key={p.id} className="group overflow-hidden rounded-xl border bg-background shadow-sm transition hover:shadow-md">
-            {p.cover ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={p.cover} alt="" className="h-40 w-full object-cover object-center" />
-            ) : (
-              <div className="h-40 w-full bg-muted" />
-            )}
-            <div className="p-4">
-              <h2 className="line-clamp-2 text-base font-semibold group-hover:underline">
-                <Link href={`/post/${p.id}`}>{p.title}</Link>
-              </h2>
-              <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{p.excerpt}</p>
-              <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                <span>{p.minutes} min</span>
-                <Link href={`/post/${p.id}`} className="rounded-md border px-2 py-1 hover:bg-accent">Read</Link>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+      <ProfileTabs posts={MOCK_POSTS} bookmarks={MOCK_BOOKMARKS} archive={MOCK_ARCHIVE} />
     </div>
   );
 }
