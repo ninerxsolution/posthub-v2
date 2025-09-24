@@ -1,12 +1,22 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function FeedList() {
   const router = useRouter();
+  const [visible, setVisible] = useState(6);
 
   const handleCreatePost = () => {
     router.push("/posts/create");
   };
+
+  const TOTAL = 30;
+  const items = Array.from({ length: TOTAL }).map((_, idx) => ({
+    id: String(idx + 1),
+    title: `Sample blog post title ${idx + 1}`,
+  }));
+
+  const canLoadMore = visible < items.length;
 
   return (
     <section className="lg:col-span-6">
@@ -25,14 +35,14 @@ export default function FeedList() {
           
         </div>
 
-        {[...Array(6)].map((_, idx) => (
-          <article key={idx} className="rounded-xl border bg-white/50 p-5 shadow-sm transition hover:shadow-md dark:bg-neutral-900/50">
+        {items.slice(0, visible).map((it) => (
+          <article key={it.id} className="rounded-xl border bg-white/50 p-5 shadow-sm transition hover:shadow-md dark:bg-neutral-900/50">
             <div className="mb-2 flex items-center gap-3 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-2"><span className="h-6 w-6 rounded-full bg-neutral-300 dark:bg-neutral-700" />Author Name</span>
               <span>·</span>
               <time dateTime="2025-09-23">2h ago</time>
             </div>
-            <h2 className="text-lg font-semibold leading-snug">Sample blog post title {idx + 1}</h2>
+            <h2 className="text-lg font-semibold leading-snug">{it.title}</h2>
             <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
               This is a short excerpt of the content to give readers a quick idea of what the post is about. It should be enticing enough to click through and read more.
             </p>
@@ -42,10 +52,22 @@ export default function FeedList() {
                 <span className="rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">#nextjs</span>
                 <span className="rounded-md bg-neutral-100 px-2 py-1 dark:bg-neutral-800">#tailwind</span>
               </div>
-              <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90" onClick={() => router.push(`/posts/1`)}>Read</button>
+              <button className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:opacity-90" onClick={() => router.push(`/posts/${it.id}`)}>Read</button>
             </div>
           </article>
         ))}
+
+        {canLoadMore && (
+          <div className="pt-2 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setVisible((v) => Math.min(v + 6, items.length))}
+              className="rounded-md border px-4 py-2 text-sm hover:bg-accent"
+            >
+              Show more
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

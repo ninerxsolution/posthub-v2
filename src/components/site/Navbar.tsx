@@ -26,7 +26,7 @@ export default function Navbar() {
     e.preventDefault();
     const q = searchQuery.trim();
     if (!q) return;
-    router.push(`/posts?search=${encodeURIComponent(q)}`);
+    router.push(`/search?q=${encodeURIComponent(q)}`);
     setIsOpen(false);
   };
 
