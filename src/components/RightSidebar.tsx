@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function RightSidebar() {
   return (
     <aside className="hidden lg:col-span-3 lg:block">
@@ -13,7 +15,12 @@ export default function RightSidebar() {
               { tag: "design", count: "760" },
             ].map((t) => (
               <li key={t.tag} className="flex items-center justify-between">
-                <a className="text-primary hover:underline" href="#">#{t.tag}</a>
+                <Link 
+                  href={`/search?q=${encodeURIComponent(t.tag)}`}
+                  className="text-primary hover:underline"
+                >
+                  #{t.tag}
+                </Link>
                 <span className="text-xs text-muted-foreground">{t.count}</span>
               </li>
             ))}
@@ -23,12 +30,16 @@ export default function RightSidebar() {
         <section className="rounded-xl border bg-white/50 p-4 shadow-sm dark:bg-neutral-900/50">
           <h3 className="mb-3 text-sm font-semibold">Recommended</h3>
           <ul className="space-y-3 text-sm">
-            {[1, 2, 3].map((id) => (
-              <li key={id} className="group">
-                <a href="#" className="block">
-                  <div className="font-medium group-hover:underline">A great read about performance</div>
-                  <div className="text-xs text-muted-foreground">by Jane Doe · 8 min</div>
-                </a>
+            {[
+              { id: "1", title: "Building Scalable React Applications", author: "Jane Doe", minutes: 8 },
+              { id: "2", title: "Next.js 14 Performance Optimization", author: "John Smith", minutes: 12 },
+              { id: "3", title: "TypeScript Best Practices Guide", author: "Sarah Wilson", minutes: 6 },
+            ].map((post) => (
+              <li key={post.id} className="group">
+                <Link href={`/posts/${post.id}`} className="block">
+                  <div className="font-medium group-hover:underline">{post.title}</div>
+                  <div className="text-xs text-muted-foreground">by {post.author} · {post.minutes} min</div>
+                </Link>
               </li>
             ))}
           </ul>

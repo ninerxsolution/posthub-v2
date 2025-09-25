@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Bookmark, Edit, Share2, EyeOff } from "lucide-react";
+import LikeButton from "@/components/LikeButton";
+import CommentsSection from "@/components/CommentsSection";
 
 type Post = {
   id: string;
@@ -58,6 +60,7 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
               <EyeOff className="h-4 w-4" />
               Unpublish
             </button>
+            <LikeButton initialLiked={false} initialCount={23} />
           </div>
         ) : (
           <div className="flex items-center gap-3">
@@ -84,6 +87,7 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
             >
               <Bookmark className="h-4 w-4" />
             </button>
+            <LikeButton initialLiked={false} initialCount={23} />
           </div>
         )}
       </div>
@@ -150,6 +154,8 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
           a volutpat tortor viverra in.
         </p>
       </article>
+
+      <CommentsSection />
 
       <hr className="my-10" />
 

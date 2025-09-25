@@ -1,3 +1,5 @@
+"use client";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProfileTabs from "@/components/profile/ProfileTabs";
@@ -59,7 +61,21 @@ const MOCK_ARCHIVE = Array.from({ length: 3 }).map((_, i) => ({
   minutes: 5 + (i % 6),
 }));
 
+const MOCK_DRAFTS = Array.from({ length: 4 }).map((_, i) => ({
+  id: String(i + 301),
+  title: `Draft post #${i + 1}`,
+  cover: i % 2 === 1 ? `https://picsum.photos/seed/draft-${i}/800/500` : undefined,
+  excerpt:
+    "This draft is not published yet. Continue writing when you're ready.",
+  minutes: 3 + (i % 5),
+}));
+
 export default function ProfilePage({ params }: { params: { username: string } }) {
+  const searchParams = useSearchParams();
+  const tabParam = (searchParams.get("tab") || "posts").toLowerCase();
+  const initialTab = ["posts", "bookmarks", "archive", "drafts"].includes(tabParam)
+    ? (tabParam as "posts" | "bookmarks" | "archive" | "drafts")
+    : "posts";
   const user = MOCK_USERS.find((u) => u.username.toLowerCase() === params.username.toLowerCase());
   if (!user) return notFound();
   const isOwner = user.username.toLowerCase() === "jane"; // mock: jane is the signed-in user
@@ -110,7 +126,7 @@ export default function ProfilePage({ params }: { params: { username: string } }
         </div>
       </section>
 
-      <ProfileTabs posts={MOCK_POSTS} bookmarks={MOCK_BOOKMARKS} archive={MOCK_ARCHIVE} />
+      <ProfileTabs posts={MOCK_POSTS} bookmarks={MOCK_BOOKMARKS} archive={MOCK_ARCHIVE} drafts={MOCK_DRAFTS} initialTab={initialTab} />
     </div>
   );
 }

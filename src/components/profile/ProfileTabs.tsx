@@ -14,12 +14,16 @@ export default function ProfileTabs({
   posts,
   bookmarks,
   archive,
+  drafts,
+  initialTab = "posts",
 }: {
   posts: Item[];
   bookmarks: Item[];
   archive: Item[];
+  drafts: Item[];
+  initialTab?: "posts" | "bookmarks" | "archive" | "drafts";
 }) {
-  const [tab, setTab] = useState<"posts" | "bookmarks" | "archive">("posts");
+  const [tab, setTab] = useState<"posts" | "bookmarks" | "archive" | "drafts">(initialTab);
 
   return (
     <div>
@@ -54,6 +58,16 @@ export default function ProfileTabs({
         >
           Archive
         </button>
+        <button
+          className={`px-2 py-3 ${
+            tab === "drafts"
+              ? "-mb-px border-b-2 border-foreground font-medium"
+              : "text-muted-foreground hover:text-foreground transition-colors"
+          }`}
+          onClick={() => setTab("drafts")}
+        >
+          Drafts
+        </button>
       </div>
 
       {tab === "posts" && (
@@ -67,6 +81,11 @@ export default function ProfileTabs({
       {tab === "archive" && (
         <section className="mt-6">
           <Grid items={archive} />
+        </section>
+      )}
+      {tab === "drafts" && (
+        <section className="mt-6">
+          <DraftGrid items={drafts} />
         </section>
       )}
     </div>
@@ -92,6 +111,36 @@ function Grid({ items }: { items: Item[] }) {
             <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
               <span>{p.minutes} min</span>
               <Link href={`/post/${p.id}`} className="rounded-md border px-2 py-1 hover:bg-accent">Read</Link>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function DraftGrid({ items }: { items: Item[] }) {
+  return (
+    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((p) => (
+        <article key={p.id} className="group overflow-hidden rounded-xl border bg-background shadow-sm transition hover:shadow-md">
+          {p.cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={p.cover} alt="" className="h-40 w-full object-cover object-center" />
+          ) : (
+            <div className="h-40 w-full bg-muted" />
+          )}
+          <div className="p-4">
+            <div className="mb-1 flex items-center justify-between">
+              <h3 className="line-clamp-2 text-base font-semibold group-hover:underline">
+                <Link href={`/posts/${p.id}/edit`}>{p.title}</Link>
+              </h3>
+              <span className="rounded-md border px-2 py-0.5 text-xs">Draft</span>
+            </div>
+            <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{p.excerpt}</p>
+            <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+              <span>~ {p.minutes} min</span>
+              <Link href={`/posts/${p.id}/edit`} className="rounded-md border px-2 py-1 hover:bg-accent">Continue editing</Link>
             </div>
           </div>
         </article>

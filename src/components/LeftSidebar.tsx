@@ -31,8 +31,8 @@ export default function LeftSidebar() {
           <ul className="space-y-2 text-sm">
             <li><a className="text-primary hover:underline" href="/jane">Profile</a></li>
             <li><a className="text-primary hover:underline" href="/posts/create">New post</a></li>
-            <li><a className="text-primary hover:underline" href="#">Drafts</a></li>
-            <li><a className="text-primary hover:underline" href="#">Bookmarks</a></li>
+            <li><a className="text-primary hover:underline" href="/jane?tab=drafts">Drafts</a></li>
+            <li><a className="text-primary hover:underline" href="/jane?tab=bookmarks">Bookmarks</a></li>
             <li><a className="text-primary hover:underline" href="/settings">Settings</a></li>
           </ul>
         </section>
