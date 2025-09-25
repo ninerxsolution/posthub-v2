@@ -21,12 +21,11 @@ export function useLanguage() {
 }
 
 export default function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>("th");
-
-  useEffect(() => {
-    const saved = (typeof window !== "undefined" && localStorage.getItem("lang")) as Lang | null;
-    if (saved) setLang(saved);
-  }, []);
+  const [lang, setLang] = useState<Lang>(() => {
+    if (typeof window === "undefined") return "th";
+    const saved = localStorage.getItem("lang") as Lang | null;
+    return saved ?? "th";
+  });
 
   useEffect(() => {
     try { localStorage.setItem("lang", lang); } catch {}

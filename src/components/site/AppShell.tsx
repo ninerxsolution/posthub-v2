@@ -47,7 +47,7 @@ export default function AppShell({ children }: AppShellProps) {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col overflow-hidden">
       {showProgress && (
         <div className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 bg-transparent">
           <div
@@ -61,7 +61,7 @@ export default function AppShell({ children }: AppShellProps) {
         </div>
       )}
       {!hideChrome && <Navbar />}
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 pt-20">
         {children}
       </main>
       {<Footer />}

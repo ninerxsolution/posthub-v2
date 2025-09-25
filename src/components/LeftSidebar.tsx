@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function LeftSidebar() {
   return (
     <aside className="hidden lg:col-span-3 lg:block ">
@@ -29,11 +31,12 @@ export default function LeftSidebar() {
         <section className="rounded-xl border bg-white/50 p-4 shadow-sm dark:bg-neutral-900/50">
           <h3 className="mb-3 text-sm font-semibold">Shortcuts</h3>
           <ul className="space-y-2 text-sm">
-            <li><a className="text-primary hover:underline" href="/jane">Profile</a></li>
-            <li><a className="text-primary hover:underline" href="/posts/create">New post</a></li>
-            <li><a className="text-primary hover:underline" href="/jane?tab=drafts">Drafts</a></li>
-            <li><a className="text-primary hover:underline" href="/jane?tab=bookmarks">Bookmarks</a></li>
-            <li><a className="text-primary hover:underline" href="/settings">Settings</a></li>
+            <li><Link className="text-primary hover:underline" href="/jane">Profile</Link></li>
+            <li><Link className="text-primary hover:underline" href="/posts/create">New post</Link></li>
+            <li><Link className="text-primary hover:underline" href="/jane?tab=drafts">Drafts</Link></li>
+            <li><Link className="text-primary hover:underline" href="/jane?tab=bookmarks">Bookmarks</Link></li>
+            <li><Link className="text-primary hover:underline" href="/settings">Settings</Link></li>
+            <li><Link className="text-primary hover:underline" href="/sign-out">Sign out</Link></li>
           </ul>
         </section>
       </div>

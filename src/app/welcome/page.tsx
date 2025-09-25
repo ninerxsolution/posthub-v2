@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 
 export default function SignIn() {
   const [view, setView] = useState<"forgot" | "signin" | "signup">("signin");
@@ -115,7 +114,7 @@ export default function SignIn() {
                       <div>
                         <button
                           type="submit"
-                          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200"
+                          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-background bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200"
                         >
                           Send reset link
                         </button>
@@ -203,7 +202,7 @@ export default function SignIn() {
                       <div>
                         <button
                           type="submit"
-                          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200"
+                          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-background bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200"
                         >
                           Sign in
                         </button>
@@ -211,7 +210,7 @@ export default function SignIn() {
 
                       <div className="mt-6 text-center">
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                          Don't have an account?{" "}
+                          Don&apos;t have an account?{" "}
                           <button
                             type="button"
                             onClick={() => setView("signup")}
@@ -288,7 +287,7 @@ export default function SignIn() {
                       <div>
                         <button
                           type="submit"
-                          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200"
+                          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-background bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200"
                         >
                           Create account
                         </button>
