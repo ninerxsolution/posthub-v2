@@ -5,7 +5,7 @@ import { Menu, X, Search, Bell, Heart, MessageCircle, UserPlus, Check } from "lu
 import { useRouter } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import LangToggle from "./LangToggle";
-import { useLanguage } from "@/i18n/LanguageProvider";
+// import { useLanguage } from "@/i18n/LanguageProvider";
 
 type NavItem = {
   href: string;

@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProfileTabs from "@/components/profile/ProfileTabs";
+import { useRouter } from "next/navigation";
 type User = {
   username: string;
   name: string;
@@ -71,6 +72,7 @@ const MOCK_DRAFTS = Array.from({ length: 4 }).map((_, i) => ({
 }));
 
 export default function ProfilePage({ params }: { params: { username: string } }) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = (searchParams.get("tab") || "posts").toLowerCase();
   const initialTab = ["posts", "bookmarks", "archive", "drafts"].includes(tabParam)
@@ -113,7 +115,7 @@ export default function ProfilePage({ params }: { params: { username: string } }
           <div className="flex gap-2 self-stretch sm:self-auto">
             {isOwner ? (
               <>
-                <button className="rounded-md border px-4 py-2 text-sm hover:bg-accent">Edit profile</button>
+                <button className="rounded-md border px-4 py-2 text-sm hover:bg-accent" onClick={() => router.push(`/${user.username}/edit`)}>Edit profile</button>
                 <Link href="/posts/create" className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">New post</Link>
               </>
             ) : (
