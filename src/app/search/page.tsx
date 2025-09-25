@@ -1,6 +1,7 @@
 //
-import LeftSidebar from "@/components/LeftSidebar";
-import RightSidebar from "@/components/RightSidebar";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
+import { LeftSidebarSkeleton, RightSidebarSkeleton } from "@/components/skeletons/SidebarsSkeleton";
 import ResultsList from "@/components/search/ResultsList";
 
 type Post = {
@@ -18,6 +19,9 @@ const MOCK: Post[] = Array.from({ length: 24 }).map((_, i) => ({
   tags: ["react", i % 2 ? "nextjs" : "design", i % 3 ? "tailwind" : "ui"],
 }));
 
+const LeftSidebar = dynamic(() => import("@/components/LeftSidebar"), { suspense: true });
+const RightSidebar = dynamic(() => import("@/components/RightSidebar"), { suspense: true });
+
 export default function SearchPage({ searchParams }: { searchParams: { q?: string; page?: string } }) {
   const q = (searchParams.q ?? "").trim();
   // client-side load-more; no pagination
@@ -34,7 +38,9 @@ export default function SearchPage({ searchParams }: { searchParams: { q?: strin
   return (
     <main className="mx-auto w-full">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <LeftSidebar />
+        <Suspense fallback={<LeftSidebarSkeleton />}>
+          <LeftSidebar />
+        </Suspense>
         <section className="lg:col-span-6">
           <div className="px-4 sm:px-6 lg:px-0 py-8">
             <header className="mb-6">
@@ -57,7 +63,9 @@ export default function SearchPage({ searchParams }: { searchParams: { q?: strin
             {/* Load more handles showing additional items; no pagination */}
           </div>
         </section>
-        <RightSidebar />
+        <Suspense fallback={<RightSidebarSkeleton />}>
+          <RightSidebar />
+        </Suspense>
       </div>
     </main>
   );

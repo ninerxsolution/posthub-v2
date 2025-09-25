@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Bookmark, Edit, Share2, EyeOff } from "lucide-react";
+import { Bookmark, Edit, Share2, EyeOff, Flag } from "lucide-react";
 import LikeButton from "@/components/LikeButton";
 import CommentsSection from "@/components/CommentsSection";
 
@@ -61,6 +61,13 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
               Unpublish
             </button>
             <LikeButton initialLiked={false} initialCount={23} />
+            <Link
+              href={`/report?type=post&postId=${post.id}`}
+              className="inline-flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm shadow-sm transition-colors hover:bg-accent"
+            >
+              <Flag className="h-4 w-4" />
+              Report
+            </Link>
           </div>
         ) : (
           <div className="flex items-center gap-3">
@@ -88,6 +95,13 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
               <Bookmark className="h-4 w-4" />
             </button>
             <LikeButton initialLiked={false} initialCount={23} />
+            <Link
+              href={`/report?type=post&postId=${post.id}`}
+              className="inline-flex items-center gap-2 rounded-md border bg-background px-3 py-2 text-sm shadow-sm transition-colors hover:bg-accent"
+            >
+              <Flag className="h-4 w-4" />
+              Report
+            </Link>
           </div>
         )}
       </div>
@@ -161,11 +175,11 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
 
       <section>
         <h3 className="mb-3 text-base font-semibold">Related posts</h3>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4">
           {MOCK_POSTS.slice(0, 4).map((p) => (
             <Link
               key={p.id}
-              href={`/post/${p.id}`}
+              href={`/posts/${p.id}`}
               className="group rounded-lg border p-4 hover:bg-accent"
             >
               <div className="flex items-start gap-3">

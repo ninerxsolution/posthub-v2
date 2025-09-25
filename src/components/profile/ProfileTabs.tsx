@@ -99,18 +99,18 @@ function Grid({ items }: { items: Item[] }) {
         <article key={p.id} className="group overflow-hidden rounded-xl border bg-background shadow-sm transition hover:shadow-md">
           {p.cover ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={p.cover} alt="" className="h-40 w-full object-cover object-center" />
+            <img src={p.cover} alt="" className="h-56 w-full object-cover object-center" />
           ) : (
-            <div className="h-40 w-full bg-muted" />
+            <div className="h-56 w-full bg-muted" />
           )}
-          <div className="p-4">
-            <h3 className="line-clamp-2 text-base font-semibold group-hover:underline">
-              <Link href={`/post/${p.id}`}>{p.title}</Link>
+          <div className="p-5">
+            <h3 className="line-clamp-2 text-lg font-semibold group-hover:underline">
+              <Link href={`/posts/${p.id}`}>{p.title}</Link>
             </h3>
-            <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{p.excerpt}</p>
-            <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-              <span>{p.minutes} min</span>
-              <Link href={`/post/${p.id}`} className="rounded-md border px-2 py-1 hover:bg-accent">Read</Link>
+            <p className="mt-2 line-clamp-4 text-sm text-muted-foreground">{p.excerpt}</p>
+            <div className="mt-4 flex items-center justify-between">
+              <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">{p.minutes} min read</span>
+              <Link href={`/posts/${p.id}`} className="rounded-md border px-3 py-1.5 text-sm hover:bg-accent">Read</Link>
             </div>
           </div>
         </article>
@@ -126,21 +126,21 @@ function DraftGrid({ items }: { items: Item[] }) {
         <article key={p.id} className="group overflow-hidden rounded-xl border bg-background shadow-sm transition hover:shadow-md">
           {p.cover ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={p.cover} alt="" className="h-40 w-full object-cover object-center" />
+            <img src={p.cover} alt="" className="h-56 w-full object-cover object-center" />
           ) : (
-            <div className="h-40 w-full bg-muted" />
+            <div className="h-56 w-full bg-muted" />
           )}
-          <div className="p-4">
+          <div className="p-5">
             <div className="mb-1 flex items-center justify-between">
-              <h3 className="line-clamp-2 text-base font-semibold group-hover:underline">
+              <h3 className="line-clamp-2 text-lg font-semibold group-hover:underline">
                 <Link href={`/posts/${p.id}/edit`}>{p.title}</Link>
               </h3>
               <span className="rounded-md border px-2 py-0.5 text-xs">Draft</span>
             </div>
-            <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{p.excerpt}</p>
-            <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-              <span>~ {p.minutes} min</span>
-              <Link href={`/posts/${p.id}/edit`} className="rounded-md border px-2 py-1 hover:bg-accent">Continue editing</Link>
+            <p className="mt-2 line-clamp-4 text-sm text-muted-foreground">{p.excerpt}</p>
+            <div className="mt-4 flex items-center justify-between">
+              <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">~ {p.minutes} min</span>
+              <Link href={`/posts/${p.id}/edit`} className="rounded-md border px-3 py-1.5 text-sm hover:bg-accent">Continue editing</Link>
             </div>
           </div>
         </article>

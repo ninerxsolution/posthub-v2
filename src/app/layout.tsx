@@ -4,16 +4,16 @@ import "./globals.css";
 import AppShell from "@/components/site/AppShell";
 import LanguageProvider from "@/i18n/LanguageProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+// const geistSans = localFont({
+//   src: "./fonts/GeistVF.woff",
+//   variable: "--font-geist-sans",
+//   weight: "100 900",
+// });
+// const geistMono = localFont({
+//   src: "./fonts/GeistMonoVF.woff",
+//   variable: "--font-geist-mono",
+//   weight: "100 900",
+// });
 const notoThai = localFont({
   src: "../../public/fonts/Noto_Sans_Thai/NotoSansThai-VariableFont_wdth,wght.ttf",
   variable: "--font-noto-thai",

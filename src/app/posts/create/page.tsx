@@ -1,9 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 
 export default function CreatePostPage() {
   const router = useRouter();
+  const coverInputRef = useRef<HTMLInputElement | null>(null);
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -197,9 +201,9 @@ export default function CreatePostPage() {
         <aside className="lg:col-span-4">
           <div className="lg:sticky lg:top-24 space-y-6">
             <div>
-              <label htmlFor="cover" className="block text-sm font-medium">
+              <Label htmlFor="cover" className="block text-sm font-medium">
                 Feature image (optional)
-              </label>
+              </Label>
               <div className="mt-1 flex flex-col">
                 {coverPreview ? (
                   <div className="relative w-full overflow-hidden rounded-lg border bg-muted/30 aspect-[4/3] mb-5">
@@ -209,16 +213,24 @@ export default function CreatePostPage() {
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                ) : ''}
-                <div>
-                  <input
+                ) : null}
+                <div className="flex items-center gap-3">
+                  <Input
+                    ref={coverInputRef}
                     id="cover"
                     name="cover"
                     type="file"
                     accept="image/*"
                     onChange={handleFileChange}
-                    className="block w-full text-sm transition-all duration-200 ease-out file:transition-all file:duration-200 file:ease-out file:mr-3 file:rounded-md file:border file:border-primary/10 file:bg-background file:px-3 file:py-2 file:text-sm file:hover:bg-accent"
+                    className="hidden"
                   />
+                  <Button type="button" variant="outline" onClick={() => coverInputRef.current?.click()}>
+                    Choose file
+                  </Button>
+                  <span className="text-xs text-muted-foreground truncate">
+                    {coverFile?.name || (coverPreview ? "Selected image" : "No file chosen")}
+                  </span>
+                </div>
                   {coverPreview && (
                     <button
                       type="button"
@@ -233,7 +245,6 @@ export default function CreatePostPage() {
                   )}
                 </div>
               </div>
-            </div>
 
             <div>
               <label htmlFor="tags" className="block text-sm font-medium">

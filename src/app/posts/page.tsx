@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 type Post = {
   id: string;
@@ -54,12 +56,9 @@ export default function PostsPage() {
             <p className="mt-1 text-sm text-muted-foreground">Latest community posts</p>
           )}
         </div>
-        <Link
-          href="/posts/create"
-          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
-        >
-          Create post
-        </Link>
+        <Button asChild>
+          <Link href="/posts/create">Create post</Link>
+        </Button>
       </div>
 
       {posts.length === 0 ? (
@@ -82,13 +81,13 @@ export default function PostsPage() {
               )}
               <div className="p-4">
                 <h2 className="line-clamp-2 text-base font-semibold group-hover:underline">
-                  <Link href={`/post/${post.id}`}>{post.title}</Link>
+                  <Link href={`/posts/${post.id}`}>{post.title}</Link>
                 </h2>
                 <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{post.excerpt}</p>
                 <div className="mt-3 flex items-center justify-between">
                   <div className="flex flex-wrap gap-2 text-xs">
                     {post.tags.map((t) => (
-                      <span key={t} className="rounded-md bg-muted px-2 py-1">#{t}</span>
+                      <Badge key={t}>#{t}</Badge>
                     ))}
                   </div>
                   <span className="text-xs text-muted-foreground">{post.minutes} min</span>

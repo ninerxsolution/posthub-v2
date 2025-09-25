@@ -1,7 +1,8 @@
 "use client";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Flag } from "lucide-react";
+import LikeButton from "@/components/LikeButton";
 
 type Comment = {
   id: string;
@@ -169,7 +170,16 @@ export default function CommentsSection() {
             </div>
             <p className="text-sm leading-relaxed">{renderWithMentions(c.content)}</p>
 
-            <div className="mt-3">
+            <div className="mt-3 flex items-center gap-3">
+              <LikeButton initialLiked={false} initialCount={0} />
+              <Link
+                href={`/report?type=comment&commentId=${c.id}`}
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                title="Report comment"
+              >
+                <Flag className="h-3.5 w-3.5" />
+                Report
+              </Link>
               <button
                 type="button"
                 className="text-xs text-primary hover:underline"
@@ -216,6 +226,17 @@ export default function CommentsSection() {
                       <time>{r.time}</time>
                     </div>
                     <p className="text-sm leading-relaxed">{renderWithMentions(r.content)}</p>
+                    <div className="mt-2 flex items-center gap-3">
+                      <LikeButton initialLiked={false} initialCount={0} />
+                      <Link
+                        href={`/report?type=comment&commentId=${r.id}`}
+                        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                        title="Report comment"
+                      >
+                        <Flag className="h-3.5 w-3.5" />
+                        Report
+                      </Link>
+                    </div>
                   </li>
                 ))}
               </ul>
