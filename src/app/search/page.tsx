@@ -8,6 +8,7 @@ type Post = {
   id: string;
   title: string;
   excerpt: string;
+  cover?: string;
   tags: string[];
 };
 
@@ -16,6 +17,7 @@ const MOCK: Post[] = Array.from({ length: 24 }).map((_, i) => ({
   title: `Sample Post Title ${i + 1}`,
   excerpt:
     "This is a short excerpt for the post. It provides a quick overview of the content.",
+  cover: i % 3 === 0 ? `https://picsum.photos/seed/${i + 1}/800/400` : undefined,
   tags: ["react", i % 2 ? "nextjs" : "design", i % 3 ? "tailwind" : "ui"],
 }));
 

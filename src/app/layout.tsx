@@ -4,6 +4,7 @@ import "./globals.css";
 import AppShell from "@/components/site/AppShell";
 import LanguageProvider from "@/i18n/LanguageProvider";
 import { ThemeProvider } from "@/components/site/ThemeProvider";
+import ConditionalLayout from "../components/ConditionalLayout";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -37,7 +38,7 @@ export default function RootLayout({
       <body className={`${notoThai.variable} antialiased`}>
         <ThemeProvider>
           <LanguageProvider>
-            <AppShell>{children}</AppShell>
+            <ConditionalLayout>{children}</ConditionalLayout>
           </LanguageProvider>
         </ThemeProvider>
       </body>

@@ -13,18 +13,16 @@ const RightSidebar = dynamic(() => import("@/components/RightSidebar"), { suspen
 export default function Home() {
   // const { dict } = useLanguage();
   return (
-    <main className="mx-auto w-full">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <Suspense fallback={<LeftSidebarSkeleton />}>
-          <LeftSidebar />
-        </Suspense>
-        <Suspense fallback={<FeedListSkeleton />}>
-          <FeedList />
-        </Suspense>
-        <Suspense fallback={<RightSidebarSkeleton />}>
-          <RightSidebar />
-        </Suspense>
-      </div>
-    </main>
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <Suspense fallback={<LeftSidebarSkeleton />}>
+        <LeftSidebar />
+      </Suspense>
+      <Suspense fallback={<FeedListSkeleton />}>
+        <FeedList />
+      </Suspense>
+      <Suspense fallback={<RightSidebarSkeleton />}>
+        <RightSidebar />
+      </Suspense>
+    </div>
   );
 }

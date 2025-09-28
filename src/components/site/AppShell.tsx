@@ -47,7 +47,9 @@ export default function AppShell({ children }: AppShellProps) {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-screen flex-col overflow-hidden">
+    <div
+      className={`min-h-screen flex flex-col ${hideChrome ? "overflow-hidden" : ""}`}
+    >
       {showProgress && (
         <div className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 bg-transparent">
           <div

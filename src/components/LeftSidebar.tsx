@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function LeftSidebar() {
   return (
     <aside className="hidden lg:col-span-3 lg:block ">
-      <div className="sticky top-4 space-y-4 top-[90px]">
+      <div className="sticky space-y-4 top-20">
         <section className="rounded-xl border bg-white/50 p-4 shadow-sm dark:bg-neutral-900/50">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 shrink-0 rounded-full bg-gradient-to-tr from-indigo-500 to-fuchsia-500" />
@@ -31,6 +31,7 @@ export default function LeftSidebar() {
         <section className="rounded-xl border bg-white/50 p-4 shadow-sm dark:bg-neutral-900/50">
           <h3 className="mb-3 text-sm font-semibold">Shortcuts</h3>
           <ul className="space-y-2 text-sm">
+            <li><Link className="text-primary hover:underline" href="/insights">Insights</Link></li>
             <li><Link className="text-primary hover:underline" href="/jane">Profile</Link></li>
             <li><Link className="text-primary hover:underline" href="/posts/create">New post</Link></li>
             <li><Link className="text-primary hover:underline" href="/jane?tab=drafts">Drafts</Link></li>
