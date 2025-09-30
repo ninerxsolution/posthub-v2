@@ -10,6 +10,7 @@ type LanguageContextValue = {
   lang: Lang;
   dict: Dict;
   setLang: (l: Lang) => void;
+  isHydrated: boolean;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
@@ -21,19 +22,31 @@ export function useLanguage() {
 }
 
 export default function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>(() => {
-    if (typeof window === "undefined") return "th";
-    const saved = localStorage.getItem("lang") as Lang | null;
-    return saved ?? "th";
-  });
+  // Always start with "th" to match server-side rendering
+  const [lang, setLang] = useState<Lang>("th");
+  const [isHydrated, setIsHydrated] = useState(false);
 
+  // Load saved language preference after hydration
   useEffect(() => {
-    try { localStorage.setItem("lang", lang); } catch {}
-  }, [lang]);
+    const saved = localStorage.getItem("lang") as Lang | null;
+    if (saved && saved !== lang) {
+      setLang(saved);
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Save language preference to localStorage
+  useEffect(() => {
+    if (isHydrated) {
+      try { 
+        localStorage.setItem("lang", lang); 
+      } catch {}
+    }
+  }, [lang, isHydrated]);
 
   const dict = useMemo(() => (lang === "th" ? th : en), [lang]);
 
-  const value = useMemo(() => ({ lang, dict, setLang }), [lang, dict]);
+  const value = useMemo(() => ({ lang, dict, setLang, isHydrated }), [lang, dict, isHydrated]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

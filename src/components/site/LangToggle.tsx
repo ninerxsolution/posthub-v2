@@ -4,7 +4,7 @@ import { useLanguage } from "@/i18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 
 export default function LangToggle() {
-  const { lang, setLang } = useLanguage();
+  const { lang, setLang, isHydrated } = useLanguage();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -40,8 +40,10 @@ export default function LangToggle() {
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        <span className="mr-1" aria-hidden>{flagFor(lang)}</span>
-        {lang.toUpperCase()}
+        <span className="mr-1" aria-hidden>
+          {isHydrated ? flagFor(lang) : "🇹🇭"}
+        </span>
+        {isHydrated ? lang.toUpperCase() : "TH"}
       </Button>
       <div
         role="menu"

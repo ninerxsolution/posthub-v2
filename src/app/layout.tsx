@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import AppShell from "@/components/site/AppShell";
-import LanguageProvider from "@/i18n/LanguageProvider";
+// import AppShell from "@/components/site/AppShell";
+import LanguageProvider from "@/i18n/LanguageProvider"; 
 import { ThemeProvider } from "@/components/site/ThemeProvider";
 import ConditionalLayout from "../components/ConditionalLayout";
 

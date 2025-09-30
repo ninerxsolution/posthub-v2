@@ -8,22 +8,21 @@ import {
   Users, 
   FileText, 
   TrendingUp, 
-  Settings,
   User,
   GalleryVerticalEnd,
-  SquareTerminal,
   Bot,
-  BookOpen,
   Settings2,
-  Frame,
   ChartPie,
-  Map,
-  MoreHorizontal,
   ChevronsUpDown,
   ChevronRight,
   Plus,
   LogOut,
-  UserPlus
+  UserPlus,
+  Globe,
+  Lightbulb,
+  Activity,
+  Zap,
+  Users2
 } from "lucide-react";
 import {
   Sidebar,
@@ -54,6 +53,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+interface MenuItem {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  url?: string;
+  isCollapsible?: boolean;
+  items?: { title: string; url: string }[];
+}
+
 const teams = [
   {
     name: "PostHub Inc",
@@ -72,25 +79,82 @@ const teams = [
   },
 ];
 
-const platformItems = [
+const analyticsItems: MenuItem[] = [
   {
-    title: "Playground",
-    icon: SquareTerminal,
+    title: "Overview",
+    icon: BarChart3,
     isCollapsible: true,
     items: [
-      { title: "Overview", url: "/backoffice/playground" },
-      { title: "Components", url: "/backoffice/playground/components" },
+      { title: "Dashboard", url: "/backoffice/analytics/overview" },
+      { title: "Total Posts", url: "/backoffice/analytics/posts" },
+      { title: "Reach & Impressions", url: "/backoffice/analytics/reach" },
+      { title: "Total Engagement", url: "/backoffice/analytics/engagement" },
+      { title: "Growth Trends", url: "/backoffice/analytics/growth" },
     ],
   },
   {
-    title: "History",
+    title: "Post Performance",
     icon: TrendingUp,
-    url: "/backoffice/history",
+    isCollapsible: true,
+    items: [
+      { title: "Top Performing", url: "/backoffice/analytics/posts/top" },
+      { title: "Low Performing", url: "/backoffice/analytics/posts/low" },
+      { title: "Engagement Rate", url: "/backoffice/analytics/posts/engagement-rate" },
+      { title: "Click-Through Rate", url: "/backoffice/analytics/posts/ctr" },
+    ],
   },
   {
-    title: "Starred",
-    icon: BarChart3,
-    url: "/backoffice/starred",
+    title: "Audience Insights",
+    icon: Users2,
+    isCollapsible: true,
+    items: [
+      { title: "Demographics", url: "/backoffice/analytics/audience/demographics" },
+      { title: "Active Times", url: "/backoffice/analytics/audience/active-times" },
+      { title: "Follower Growth", url: "/backoffice/analytics/audience/follower-growth" },
+    ],
+  },
+  {
+    title: "Channel Insights",
+    icon: Globe,
+    isCollapsible: true,
+    items: [
+      { title: "Platform Performance", url: "/backoffice/analytics/channels/platforms" },
+      { title: "Engagement Share", url: "/backoffice/analytics/channels/engagement" },
+      { title: "ROI & Conversions", url: "/backoffice/analytics/channels/roi" },
+    ],
+  },
+  {
+    title: "Trends & Recommendations",
+    icon: Lightbulb,
+    isCollapsible: true,
+    items: [
+      { title: "Best Time to Post", url: "/backoffice/analytics/trends/best-time" },
+      { title: "Content Preferences", url: "/backoffice/analytics/trends/content-type" },
+      { title: "Smart Suggestions", url: "/backoffice/analytics/trends/suggestions" },
+    ],
+  },
+  {
+    title: "Actionable Next Steps",
+    icon: Zap,
+    isCollapsible: true,
+    items: [
+      { title: "Create New Post", url: "/backoffice/analytics/actions/create-post" },
+      { title: "Export Reports", url: "/backoffice/analytics/actions/export" },
+      { title: "Period Comparison", url: "/backoffice/analytics/actions/compare" },
+    ],
+  },
+];
+
+const managementItems: MenuItem[] = [
+  {
+    title: "User Management",
+    icon: Users,
+    url: "/backoffice/users",
+  },
+  {
+    title: "Content Moderation",
+    icon: FileText,
+    url: "/backoffice/content",
   },
   {
     title: "Settings",
@@ -98,45 +162,9 @@ const platformItems = [
     url: "/backoffice/settings",
   },
   {
-    title: "Models",
-    icon: Bot,
-    isCollapsible: true,
-    items: [
-      { title: "GPT-4", url: "/backoffice/models/gpt4" },
-      { title: "Claude", url: "/backoffice/models/claude" },
-    ],
-  },
-  {
-    title: "Documentation",
-    icon: BookOpen,
-    isCollapsible: true,
-    items: [
-      { title: "Introduction", url: "/backoffice/docs/intro" },
-      { title: "Get Started", url: "/backoffice/docs/get-started" },
-    ],
-  },
-];
-
-const projectItems = [
-  {
-    title: "Design Engineering",
-    icon: Frame,
-    url: "/backoffice/projects/design",
-  },
-  {
-    title: "Sales & Marketing",
-    icon: ChartPie,
-    url: "/backoffice/projects/sales",
-  },
-  {
-    title: "Travel",
-    icon: Map,
-    url: "/backoffice/projects/travel",
-  },
-  {
-    title: "More",
-    icon: MoreHorizontal,
-    url: "/backoffice/projects/more",
+    title: "System Health",
+    icon: Activity,
+    url: "/backoffice/system",
   },
 ];
 
@@ -144,6 +172,44 @@ export default function BackofficeLeftSidebar() {
   const pathname = usePathname();
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [selectedTeam, setSelectedTeam] = useState(teams[0]);
+
+  // Check if any item in a group is active
+  const isGroupActive = (items: MenuItem[]) => {
+    return items.some(item => {
+      if (item.url && pathname === item.url) return true;
+      if (item.items) {
+        return item.items.some(subItem => pathname === subItem.url);
+      }
+      return false;
+    });
+  };
+
+  // Check if a specific item is active
+  const isItemActive = (item: MenuItem) => {
+    if (item.url && pathname === item.url) return true;
+    if (item.items) {
+      return item.items.some(subItem => pathname === subItem.url);
+    }
+    return false;
+  };
+
+  // Auto-expand groups that contain active items
+  const getInitialOpenItems = () => {
+    const open: string[] = [];
+    analyticsItems.forEach(item => {
+      if (item.isCollapsible && isItemActive(item)) {
+        open.push(item.title);
+      }
+    });
+    return open;
+  };
+
+  // Initialize open items based on current pathname
+  const [initialized, setInitialized] = useState(false);
+  if (!initialized) {
+    setOpenItems(getInitialOpenItems());
+    setInitialized(true);
+  }
 
   const toggleItem = (title: string) => {
     setOpenItems(prev => 
@@ -173,8 +239,8 @@ export default function BackofficeLeftSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side="bottom"
-                align="end"
+                side="right"
+                align="start"
                 sideOffset={4}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
@@ -217,73 +283,120 @@ export default function BackofficeLeftSidebar() {
       </SidebarHeader>
       
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {platformItems.map((item) => (
-                <Collapsible
-                  key={item.title}
-                  asChild
-                  open={openItems.includes(item.title)}
-                  onOpenChange={() => toggleItem(item.title)}
-                >
-                  <SidebarMenuItem>
-                    {item.isCollapsible ? (
-                      <>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton tooltip={item.title}>
+        <div 
+          className={`rounded-lg mb-2 transition-all duration-500 ease-in-out ${
+            isGroupActive(analyticsItems) 
+              ? "bg-sidebar-accent/30 border border-sidebar-accent/50 shadow-sm" 
+              : "hover:bg-sidebar-accent/10"
+          }`}
+        >
+          <SidebarGroup>
+            <SidebarGroupLabel 
+              className={`transition-all duration-300 ease-in-out ${
+                isGroupActive(analyticsItems) 
+                  ? "text-sidebar-accent-foreground font-semibold" 
+                  : "text-sidebar-foreground"
+              }`}
+            >
+              Analytics & Insights
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {analyticsItems.map((item) => (
+                  <Collapsible
+                    key={item.title}
+                    asChild
+                    open={openItems.includes(item.title)}
+                    onOpenChange={() => toggleItem(item.title)}
+                  >
+                    <SidebarMenuItem>
+                      {item.isCollapsible ? (
+                        <>
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuButton 
+                              tooltip={item.title}
+                              isActive={isItemActive(item)}
+                            >
+                              <item.icon />
+                              <span>{item.title}</span>
+                              <ChevronRight className={`ml-auto transition-transform duration-300 ease-in-out ${
+                                openItems.includes(item.title) ? 'rotate-90' : ''
+                              }`} />
+                            </SidebarMenuButton>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="overflow-hidden transition-all duration-300 ease-in-out data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+                            <SidebarMenuSub>
+                              {item.items?.map((subItem) => (
+                                <SidebarMenuSubItem key={subItem.title}>
+                                  <SidebarMenuSubButton 
+                                    asChild 
+                                    isActive={pathname === subItem.url}
+                                  >
+                                    <Link href={subItem.url}>
+                                      <span>{subItem.title}</span>
+                                    </Link>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              ))}
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
+                        </>
+                      ) : (
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={isItemActive(item)} 
+                          tooltip={item.title}
+                        >
+                          <Link href={item.url || "/backoffice"}>
                             <item.icon />
                             <span>{item.title}</span>
-                            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.items?.map((subItem) => (
-                              <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton asChild isActive={pathname === subItem.url}>
-                                  <Link href={subItem.url}>
-                                    <span>{subItem.title}</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </>
-                    ) : (
-                      <SidebarMenuButton asChild isActive={pathname === item.url} tooltip={item.title}>
-                        <Link href={item.url || "#"}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    )}
-                  </SidebarMenuItem>
-                </Collapsible>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                          </Link>
+                        </SidebarMenuButton>
+                      )}
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
         
-        <SidebarGroup>
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {projectItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <div 
+          className={`rounded-lg mb-2 transition-all duration-500 ease-in-out ${
+            isGroupActive(managementItems) 
+              ? "bg-sidebar-accent/30 border border-sidebar-accent/50 shadow-sm" 
+              : "hover:bg-sidebar-accent/10"
+          }`}
+        >
+          <SidebarGroup>
+            <SidebarGroupLabel 
+              className={`transition-all duration-300 ease-in-out ${
+                isGroupActive(managementItems) 
+                  ? "text-sidebar-accent-foreground font-semibold" 
+                  : "text-sidebar-foreground"
+              }`}
+            >
+              Management
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {managementItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      asChild 
+                      isActive={isItemActive(item)}
+                    >
+                      <Link href={item.url || "/backoffice"}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
       </SidebarContent>
       
       <SidebarFooter>
@@ -306,7 +419,7 @@ export default function BackofficeLeftSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side="top"
+                side="right"
                 align="end"
                 sideOffset={4}
               >
