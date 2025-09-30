@@ -2,7 +2,7 @@
 import * as React from "react";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "default" | "outline" | "ghost";
+  variant?: "default" | "outline" | "ghost" | "destructive";
   size?: "sm" | "default" | "lg";
   asChild?: boolean;
 };
@@ -25,6 +25,7 @@ export function Button({
     default: "bg-primary text-primary-foreground hover:opacity-90",
     outline: "border bg-background hover:bg-accent",
     ghost: "hover:bg-accent",
+    destructive: "bg-destructive text-destructive-foreground hover:opacity-90",
   };
 
   const classes = `${base} ${sizes[size]} ${variants[variant]} ${className}`.trim();

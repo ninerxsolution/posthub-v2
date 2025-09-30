@@ -1,9 +1,7 @@
 "use client";
 
-import BackofficeLeftSidebar from "@/components/backoffice/LeftSidebar";
-import BackofficeNavbar from "@/components/backoffice/Navbar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { Users, MapPin, Calendar, Clock, Globe, TrendingUp } from "lucide-react";
+import { Users, MapPin, Calendar, Clock, Globe } from "lucide-react";
 
 export default function AudienceDemographicsPage() {
   const demographics = {
@@ -30,9 +28,7 @@ export default function AudienceDemographicsPage() {
 
   return (
     <SidebarProvider>
-      <BackofficeLeftSidebar />
       <SidebarInset>
-        <BackofficeNavbar />
         
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="flex items-center justify-between">
